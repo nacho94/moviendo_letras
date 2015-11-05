@@ -1,19 +1,25 @@
 import java.util.Scanner;
+import java.awt.Point;
 
 public class letras {
+	private static int n = 0; 
+	private static int m = 0;
+	private static Point espacio = null;
+	private static char matriz[][];
+
 	public static void main (String[] args) {
-	Scanner scan = new Scanner(System.in);
+		Scanner scan = new Scanner(System.in);
 
-	int n = scan.nextInt();
-	int m = scan.nextInt();
+		n = scan.nextInt();
+		m = scan.nextInt();
 
-	String pFinal = scan.next();
-	String pInicio = scan.next();
+		String pFinal = scan.next();
+		String pInicio = scan.next();
 
-	char matriz[][] = new char[n][m];
-	crearMatriz(matriz,n,m,pInicio);
-	
-	imprimirMatriz(matriz);
+		matriz = new char[n][m];
+		crearMatriz(matriz,n,m,pInicio);
+		
+		imprimirMatriz(matriz);
 
 	}
 
@@ -26,6 +32,9 @@ public class letras {
 		for(int i = 0; i<n; i++) {
 			for(int j = 0; j<m; j++) {
 				matriz[i][j] = palabra.charAt(k);
+				if(palabra.charAt(k) == '*') {
+					espacio = new Point(i,j);
+				}
 				k++;
 			}
 		}
@@ -41,4 +50,36 @@ public class letras {
 			  System.out.println("|");
 			}
 	}
+
+	private static boolean comprobar(char matriz[][] ,String palabra) {
+		int k = 0;
+		for(int i = 0; i<n; i++) {
+			for(int j = 0; j<m; j++) {
+				if(matriz[i][j] != palabra.charAt(k)) {
+					return false;
+				}
+				k++;
+			}
+		}
+		return true;
+	}
+
+	private static boolean sePuedeMover(int x, int y) {
+		int difX = (int)Math.abs(espacio.getX() - x);
+		int difY = (int)Math.abs(espacio.getY() - y);
+		return (difY == 1 ^ difX == 1);
+
+	}
+
+	private static void mover(int x, int y) {
+		if(sePuedeMover(x,y)) {
+			matriz[(int)espacio.getX()][(int)espacio.getY()] = matriz[x][y];
+			matriz[x][y] = '*';
+			espacio.setLocation(x,y);
+		}
+
+
+	}
+
+
 }
