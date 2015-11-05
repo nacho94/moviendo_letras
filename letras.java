@@ -1,11 +1,13 @@
 import java.util.Scanner;
 import java.awt.Point;
+import java.util.Random;
 
 public class letras {
 	private static int n = 0; 
 	private static int m = 0;
 	private static Point espacio = null;
 	private static char matriz[][];
+	private static String pFinal = "";
 
 	public static void main (String[] args) {
 		Scanner scan = new Scanner(System.in);
@@ -13,12 +15,16 @@ public class letras {
 		n = scan.nextInt();
 		m = scan.nextInt();
 
-		String pFinal = scan.next();
+		pFinal = scan.next();
 		String pInicio = scan.next();
+		p("pInicio = " + pInicio);
+		p("pFinal = " + pFinal);
 
 		matriz = new char[n][m];
 		crearMatriz(matriz,n,m,pInicio);
 		
+		imprimirMatriz(matriz);
+		RandomTest();
 		imprimirMatriz(matriz);
 
 	}
@@ -77,7 +83,27 @@ public class letras {
 			matriz[x][y] = '*';
 			espacio.setLocation(x,y);
 		}
+	}
 
+	private static void RandomTest() {
+		Random rand = new Random();
+		int c = 0;
+		while(true) {
+			int x = rand.nextInt(n);
+			int y = rand.nextInt(m);
+			boolean moved = sePuedeMover(x,y);
+			//p("X=" + x + " Y=" + y + " -- P=(" + (int)espacio.getX() + "," + (int)espacio.getY() + ") C=" +c +"/" + (moved ? "moved" : "not moved"));
+			mover(x,y);
+			c++;
+			if(comprobar(matriz,pFinal)) {
+				p("Si hay solucion -- (c=" + c +")");
+				break;
+			}
+			if(c > 1000000000) {
+				p("para ya tio");
+				break;
+			}
+		}
 
 	}
 
