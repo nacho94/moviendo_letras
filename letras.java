@@ -8,29 +8,58 @@ public class letras {
 	private static Point espacio = null;
 	private static char matriz[][];
 	private static String pFinal = "";
+	private static String pInicio = "";
 
 	public static void main (String[] args) {
-		Scanner scan = new Scanner(System.in);
+		try{
+			Scanner scan = new Scanner(System.in);
 
-		n = scan.nextInt();
-		m = scan.nextInt();
+			n = scan.nextInt();
+			m = scan.nextInt();
 
-		pFinal = scan.next();
-		String pInicio = scan.next();
-		p("pInicio = " + pInicio);
-		p("pFinal = " + pFinal);
+			pFinal = scan.next();
+			pInicio = scan.next();
+			//p("pInicio = " + pInicio);
+			//p("pFinal = " + pFinal);
+			comprobacionEntradaErronea();
+			if(comprobarNoSolucion()) {
+				matriz = new char[n][m];
+				crearMatriz(matriz,n,m,pInicio);
+				
+				imprimirMatriz(matriz);
+				RandomTest();
+				imprimirMatriz(matriz);
+			} else {
+				System.out.println("No hay solución.");
+			}
+			
 
-		matriz = new char[n][m];
-		crearMatriz(matriz,n,m,pInicio);
+		}catch(Exception e) {
+			System.out.println("Entrada errónea.");
+		}
 		
-		imprimirMatriz(matriz);
-		RandomTest();
-		imprimirMatriz(matriz);
 
 	}
 
 	private static void p(String m) {
 		System.out.println(m);
+	}
+
+	private static void comprobacionEntradaErronea() throws Exception {
+		if(pFinal.length() != pInicio.length()) {
+			throw new Exception();
+		}
+		char c = 'y';
+		for(int i = 0; i<pInicio.length(); i++) {
+			if(pInicio.charAt(i) == '*') {
+				c = '*';
+			}
+		}
+
+		if(c != '*') {
+			throw new Exception();
+		}
+
 	}
 
 	private static void crearMatriz(char matriz[][],int n, int m, String palabra) {
@@ -55,6 +84,22 @@ public class letras {
 			  }
 			  System.out.println("|");
 			}
+	}
+
+	private static boolean comprobarNoSolucion() {
+		boolean result = true;
+		for(int i = 0; i<pInicio.length(); i++) {
+			result = false;
+			for(int j = 0; j< pFinal.length(); j++) {
+				if(pInicio.charAt(i) == pFinal.charAt(j)) {
+					result = true;
+				}
+			}
+			if(result == false) {
+				break;}
+		}
+		p("--" + result);
+		return result;
 	}
 
 	private static boolean comprobar(char matriz[][] ,String palabra) {
@@ -96,7 +141,8 @@ public class letras {
 			mover(x,y);
 			c++;
 			if(comprobar(matriz,pFinal)) {
-				p("Si hay solucion -- (c=" + c +")");
+				p("Sí hay solución.");
+				p(" -- (c=" + c +")");
 				break;
 			}
 			if(c > 1000000000) {
